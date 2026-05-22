@@ -6,10 +6,17 @@ task deleteAdaptiveIconConfigs {
         def filesToDelete = [
             'src/main/res/drawable/ic_launcher_background.xml',
             'src/main/res/drawable-v24/ic_launcher_foreground.xml',
+            'src/main/res/values/ic_launcher_background.xml',  // 删除重复的颜色定义文件
+            // 删除所有分辨率的损坏PNG文件
             'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
+            'src/main/res/mipmap-hdpi/ic_launcher_foreground.png',
+            'src/main/res/mipmap-xhdpi/ic_launcher_foreground.png',
+            'src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png',
+            'src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png',
             'src/main/res/drawable/splash.png',
+            'src/main/res/drawable-land/splash.png',
             'src/main/res/drawable-land-mdpi/splash.png',
-            'src/main/res/values/ic_launcher_background.xml'  // 删除重复的颜色定义文件
+            'src/main/res/drawable-port-mdpi/splash.png'
         ]
         
         filesToDelete.each { filePath ->
