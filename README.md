@@ -1,20 +1,73 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 唐诗缺字挑战
 
-# Run and deploy your AI Studio app
+一款有趣的唐诗学习小游戏，通过填空方式帮助用户记忆唐诗。
 
-This contains everything you need to run your app locally.
+## 🎮 功能特点
 
-View your app in AI Studio: https://ai.studio/apps/e8c2cf13-bb8a-4797-b2c4-28ab9f019fcb
+- **缺字挑战**: 阅读诗句，选择正确的字填空
+- **学习模式**: 浏览唐诗，支持语音朗读
+- **进度记录**: 记录学习进度和得分
+- **古风界面**: 古典风格的UI设计
 
-## Run Locally
+## 🚀 快速开始
 
-**Prerequisites:**  Node.js
+### 前置条件
 
+- Node.js >= 20.x
+- Android Studio (用于构建 APK)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 本地运行
+
+```bash
+# 安装依赖
+npm install
+
+# 开发模式运行
+npm run dev
+
+# 构建生产版本
+npm run build
+```
+
+### 构建 Android APK
+
+```bash
+# 同步资源到 Android
+npm run cap:sync
+
+# 构建调试版本
+cd android && ./gradlew assembleDebug
+
+# 构建发布版本
+cd android && ./gradlew assembleRelease
+```
+
+## 📁 项目结构
+
+```
+├── src/                    # 源代码
+│   ├── components/         # React 组件
+│   ├── data/              # 数据文件
+│   ├── App.tsx            # 主应用组件
+│   └── main.tsx           # 入口文件
+├── android/               # Android 项目
+├── dist/                 # 构建产物
+├── index.html            # HTML 入口
+└── package.json          # 项目配置
+```
+
+## 🛠️ 技术栈
+
+- React 19 + TypeScript
+- Vite 6
+- Tailwind CSS 4
+- Capacitor 8 (Android)
+- Framer Motion (动画)
+
+## 📱 移动端
+
+本应用支持 Android 平台，通过 Capacitor 构建原生 APK。
+
+## 📄 许可证
+
+MIT License
