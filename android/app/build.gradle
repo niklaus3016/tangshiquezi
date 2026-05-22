@@ -1,15 +1,37 @@
 apply plugin: 'com.android.application'
 
-// 创建缺失的资源文件
+// 删除旧的自适应图标配置文件（保留 mipmap-anydpi-v26）
+task deleteAdaptiveIconConfigs {
+    doLast {
+        def filesToDelete = [
+            'src/main/res/drawable/ic_launcher_background.xml',
+            'src/main/res/drawable-v24/ic_launcher_foreground.xml',
+            'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
+            'src/main/res/drawable/splash.png',
+            'src/main/res/drawable-land-mdpi/splash.png'
+        ]
+        
+        filesToDelete.each { filePath ->
+            def fileObj = file(filePath)
+            if (fileObj.exists()) {
+                fileObj.delete()
+                println "Deleted: $filePath"
+            }
+        }
+    }
+}
+
+// 创建缺失的资源文件（在删除任务之后执行）
 task createMissingResources {
     doLast {
-        // 创建 adaptive icon XML 配置
+        // adaptive icon 配置
         def launcherXml = '''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/ic_launcher_background"/>
     <foreground android:drawable="@drawable/ic_launcher_foreground"/>
 </adaptive-icon>'''
         
+        // 前景图标（矢量图形）
         def foregroundXml = '''<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -21,17 +43,16 @@ task createMissingResources {
         android:pathData="M54,5 L60,40 L97,40 L65,62 L76,97 L54,75 L32,97 L43,62 L11,40 L48,40 Z"/>
 </vector>'''
         
+        // 颜色配置
         def colorsXml = '''<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#f4ecd8</color>
 </resources>'''
         
+        // 启动画面（使用颜色背景）
         def splashXml = '''<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/ic_launcher_background"/>
-    <item>
-        <bitmap android:src="@mipmap/ic_launcher" android:gravity="center"/>
-    </item>
 </layer-list>'''
         
         // 创建目录和文件
@@ -52,47 +73,13 @@ task createMissingResources {
                 println "Created: $filePath"
             }
         }
-        
-        // 删除可能存在的损坏PNG文件
-        def pngFilesToDelete = [
-            'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
-            'src/main/res/drawable/splash.png',
-            'src/main/res/drawable-land-mdpi/splash.png'
-        ]
-        
-        pngFilesToDelete.each { filePath ->
-            def fileObj = file(filePath)
-            if (fileObj.exists()) {
-                fileObj.delete()
-                println "Deleted corrupted PNG: $filePath"
-            }
-        }
     }
 }
 
-// 删除自适应图标配置文件
-task deleteAdaptiveIconConfigs {
-    doLast {
-        def filesToDelete = [
-            'src/main/res/drawable/ic_launcher_background.xml',
-            'src/main/res/drawable-v24/ic_launcher_foreground.xml',
-            'src/main/res/mipmap-anydpi-v26/ic_launcher.xml',
-            'src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml'
-        ]
-        
-        filesToDelete.each { filePath ->
-            def fileObj = file(filePath)
-            if (fileObj.exists()) {
-                fileObj.delete()
-                println "Deleted: $filePath"
-            }
-        }
-    }
-}
-
-// 在构建前执行任务
-preBuild.dependsOn createMissingResources
+// 在构建前执行任务（先删除旧文件，再创建新文件）
 preBuild.dependsOn deleteAdaptiveIconConfigs
+createMissingResources.dependsOn deleteAdaptiveIconConfigs
+preBuild.dependsOn createMissingResources
 
 android {
     namespace = "com.tangshiquezi.app"
