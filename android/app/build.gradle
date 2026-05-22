@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+// 创建缺失的PNG资源文件
+task createMissingResources {
+    doLast {
+        // 最小的有效PNG文件（1x1透明像素）
+        def minimalPng = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+        
+        def resources = [
+            'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
+            'src/main/res/drawable/splash.png',
+            'src/main/res/drawable-land-mdpi/splash.png'
+        ]
+        
+        resources.each { filePath ->
+            def fileObj = file(filePath)
+            if (!fileObj.exists()) {
+                fileObj.parentFile.mkdirs()
+                // 使用base64解码创建PNG文件
+                exec {
+                    commandLine 'bash', '-c', "echo '$minimalPng' | base64 -d > ${fileObj.absolutePath}"
+                }
+                println "Created missing resource: $filePath"
+            }
+        }
+    }
+}
+
 // 删除自适应图标配置文件
 task deleteAdaptiveIconConfigs {
     doLast {
@@ -20,7 +46,8 @@ task deleteAdaptiveIconConfigs {
     }
 }
 
-// 在构建前执行删除任务
+// 在构建前执行任务
+preBuild.dependsOn createMissingResources
 preBuild.dependsOn deleteAdaptiveIconConfigs
 
 android {
