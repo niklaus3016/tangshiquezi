@@ -231,7 +231,7 @@ export default function App() {
         />
       )}
 
-      {(!userData.agreedToPrivacy && appState !== 'splash') || showAgreementModal !== null && (
+      {((!userData.agreedToPrivacy && appState !== 'splash') || showAgreementModal !== null) && (
         <PrivacyModal
           onAccept={handlePrivacyAccept}
           onDecline={handlePrivacyDecline}
