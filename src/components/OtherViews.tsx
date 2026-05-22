@@ -515,7 +515,7 @@ export const SettingsView: React.FC<{
             <button 
               onClick={() => setModalContent({ 
                 title: '关于我们', 
-                body: '唐诗缺字闯关 v1.1\n\n一款专注于传统文化学习的小游戏，通过“缺字填充”的方式帮助您深度领略大唐风骨。所有题目均选自经典《唐诗三百首》，难度由浅入深，伴您踏上一场诗词修身之旅。\n\n腹有诗书气自华。' 
+                body: '唐诗缺字闯关 v1.0\n\n一款专注于传统文化学习的小游戏，通过“缺字填充”的方式帮助您深度领略大唐风骨。所有题目均选自经典《唐诗三百首》，难度由浅入深，伴您踏上一场诗词修身之旅。\n\n腹有诗书气自华。' 
               })} 
               className="w-full flex justify-between p-3 items-center active:bg-gray-50 transition-colors"
             >

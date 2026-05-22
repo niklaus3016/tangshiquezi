@@ -9,6 +9,7 @@ interface PrivacyModalProps {
   onOpenAgreement: () => void;
   onOpenPrivacy: () => void;
   onCloseAgreement: () => void;
+  hasAgreed?: boolean;
 }
 
 export const PrivacyModal = ({
@@ -17,64 +18,67 @@ export const PrivacyModal = ({
   showAgreementModal,
   onOpenAgreement,
   onOpenPrivacy,
-  onCloseAgreement
+  onCloseAgreement,
+  hasAgreed = false
 }: PrivacyModalProps) => (
   <>
-    <motion.div
-      initial={{ scale: 0.95, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50"
-    >
+    {!hasAgreed && (
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-ancient-paper w-full max-w-sm shadow-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-ancient-border"
+        className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50"
       >
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-ancient-red mb-6 text-center pt-4 font-kai">
-            用户协议与隐私政策
-          </h3>
-          <div className="mb-6">
-            <p className="text-base text-ancient-ink mb-3 font-kai">(1)《隐私政策》中关于个人设备用户信息的收集和使用的说明。</p>
-            <p className="text-base text-ancient-ink font-kai">(2)《隐私政策》中与第三方SDK类服务商数据共享、相关信息收集和使用说明。</p>
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-ancient-paper w-full max-w-sm shadow-2xl max-h-[80vh] overflow-y-auto rounded-xl border border-ancient-border"
+        >
+          <div className="p-6">
+            <h3 className="text-xl font-bold text-ancient-red mb-6 text-center pt-4 font-kai">
+              用户协议与隐私政策
+            </h3>
+            <div className="mb-6">
+              <p className="text-base text-ancient-ink mb-3 font-kai">(1)《隐私政策》中关于个人设备用户信息的收集和使用的说明。</p>
+              <p className="text-base text-ancient-ink font-kai">(2)《隐私政策》中与第三方SDK类服务商数据共享、相关信息收集和使用说明。</p>
+            </div>
+            <div className="mb-6">
+              <p className="text-sm text-ancient-ink/70 mb-2 font-kai">用户协议和隐私政策说明：</p>
+              <p className="text-sm text-ancient-ink font-kai">
+                阅读完整的
+                <span
+                  onClick={onOpenAgreement}
+                  className="text-ancient-red hover:underline cursor-pointer font-medium"
+                >
+                  《用户服务协议》
+                </span>
+                和
+                <span
+                  onClick={onOpenPrivacy}
+                  className="text-ancient-red hover:underline cursor-pointer font-medium"
+                >
+                  《隐私政策》
+                </span>
+                了解详细内容。
+              </p>
+            </div>
           </div>
-          <div className="mb-6">
-            <p className="text-sm text-ancient-ink/70 mb-2 font-kai">用户协议和隐私政策说明：</p>
-            <p className="text-sm text-ancient-ink font-kai">
-              阅读完整的
-              <span
-                onClick={onOpenAgreement}
-                className="text-ancient-red hover:underline cursor-pointer font-medium"
-              >
-                《用户服务协议》
-              </span>
-              和
-              <span
-                onClick={onOpenPrivacy}
-                className="text-ancient-red hover:underline cursor-pointer font-medium"
-              >
-                《隐私政策》
-              </span>
-              了解详细内容。
-            </p>
+          <div className="flex border-t border-ancient-border">
+            <button
+              onClick={onDecline}
+              className="flex-1 py-4 text-base font-medium text-ancient-ink bg-ancient-paper border-r border-ancient-border rounded-bl-xl hover:bg-ancient-bg transition-colors font-kai"
+            >
+              不同意
+            </button>
+            <button
+              onClick={onAccept}
+              className="flex-1 py-4 text-base font-medium text-white bg-ancient-red hover:opacity-90 rounded-br-xl transition-colors font-kai"
+            >
+              同意并继续
+            </button>
           </div>
-        </div>
-        <div className="flex border-t border-ancient-border">
-          <button
-            onClick={onDecline}
-            className="flex-1 py-4 text-base font-medium text-ancient-ink bg-ancient-paper border-r border-ancient-border rounded-bl-xl hover:bg-ancient-bg transition-colors font-kai"
-          >
-            不同意
-          </button>
-          <button
-            onClick={onAccept}
-            className="flex-1 py-4 text-base font-medium text-white bg-ancient-red hover:opacity-90 rounded-br-xl transition-colors font-kai"
-          >
-            同意并继续
-          </button>
-        </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    )}
 
     <AnimatePresence>
       {showAgreementModal && (
