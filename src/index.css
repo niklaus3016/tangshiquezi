@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ancient-bg: #fdf6e3;
+  --color-ancient-paper: #f4ecd8;
+  --color-ancient-ink: #2c2c2c;
+  --color-ancient-red: #8b0000;
+  --color-ancient-border: #d4c39e;
+  
+  --font-kai: "Kaiti", "STKaiti", "system-ui", "serif";
+}
+
+@layer base {
+  body {
+    @apply bg-zinc-800 text-ancient-ink font-kai h-screen overflow-hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    @apply h-full;
+  }
+
+  /* Hide scrollbars for all elements across the app */
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.ancient-card {
+  @apply bg-ancient-paper border border-ancient-border shadow-sm rounded-lg;
+}
+
+.ancient-button {
+  @apply bg-ancient-red text-white py-2 px-6 rounded-md hover:opacity-90 transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+}
+
+.ancient-title {
+  @apply text-ancient-red font-bold text-2xl tracking-widest text-center my-4;
+}
+
+/* Custom scrollbar hiding just in case */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

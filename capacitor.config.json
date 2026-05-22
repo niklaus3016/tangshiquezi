@@ -1,0 +1,8 @@
+{
+  "appId": "com.tangshiquezi.app",
+  "appName": "唐诗缺字闯关",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
