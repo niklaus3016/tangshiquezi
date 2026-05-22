@@ -33,12 +33,39 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
     
-    - name: Build APK
+    - name: Generate keystore for release signing
+      run: |
+        keytool -genkey -v \
+          -keystore ${{ github.workspace }}/tangshiquezi.keystore \
+          -alias tangshiquezi \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity 10000 \
+          -dname "CN=TangShiQueZi, OU=Dev, O=TangShiQueZi, L=Shenzhen, S=Guangdong, C=CN" \
+          -storepass ${{ secrets.KEYSTORE_PASSWORD || 'password123' }} \
+          -keypass ${{ secrets.KEY_PASSWORD || 'password123' }}
+    
+    - name: Build Debug APK
       working-directory: android
       run: ./gradlew assembleDebug
     
-    - name: Upload APK
+    - name: Build Release APK
+      working-directory: android
+      env:
+        KEYSTORE_FILE: ${{ github.workspace }}/tangshiquezi.keystore
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'password123' }}
+        KEY_ALIAS: tangshiquezi
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || 'password123' }}
+      run: ./gradlew assembleRelease
+    
+    - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
-        name: tangshiquezi-apk
+        name: tangshiquezi-debug-apk
         path: android/app/build/outputs/apk/debug/app-debug.apk
+    
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: tangshiquezi-release-apk
+        path: android/app/build/outputs/apk/release/app-release.apk
