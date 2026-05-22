@@ -46,14 +46,14 @@ task deleteAdaptiveIconConfigs {
 // 创建缺失的资源文件（在删除任务之后执行）
 task createMissingResources {
     doLast {
-        // adaptive icon 配置
+        // adaptive icon 配置 - foreground 必须是 mipmap 类型
         def launcherXml = '''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/ic_launcher_background"/>
-    <foreground android:drawable="@drawable/ic_launcher_foreground"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>'''
         
-        // 前景图标（矢量图形）
+        // 前景图标（矢量图形）- 必须放在 mipmap-anydpi-v26 目录
         def foregroundXml = '''<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -77,11 +77,11 @@ task createMissingResources {
     <item android:drawable="@color/ic_launcher_background"/>
 </layer-list>'''
         
-        // 创建目录和文件
+        // 创建目录和文件 - foreground 必须放在 mipmap-anydpi-v26
         def filesToCreate = [
             ['src/main/res/mipmap-anydpi-v26/ic_launcher.xml', launcherXml],
             ['src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml', launcherXml],
-            ['src/main/res/drawable/ic_launcher_foreground.xml', foregroundXml],
+            ['src/main/res/mipmap-anydpi-v26/ic_launcher_foreground.xml', foregroundXml],
             ['src/main/res/values/colors.xml', colorsXml],
             ['src/main/res/drawable/splash.xml', splashXml],
             ['src/main/res/drawable-land/splash.xml', splashXml]
@@ -89,11 +89,9 @@ task createMissingResources {
         
         filesToCreate.each { filePath, content ->
             def fileObj = file(filePath)
-            if (!fileObj.exists()) {
-                fileObj.parentFile.mkdirs()
-                fileObj.write(content)
-                println "Created: $filePath"
-            }
+            fileObj.parentFile.mkdirs()
+            fileObj.write(content)
+            println "Created: $filePath"
         }
     }
 }
