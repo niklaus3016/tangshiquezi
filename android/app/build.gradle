@@ -1,107 +1,5 @@
 apply plugin: 'com.android.application'
 
-// 删除旧的自适应图标配置文件（包括 mipmap-anydpi-v26）
-task deleteAdaptiveIconConfigs {
-    doLast {
-        // 删除所有可能存在的损坏PNG和XML配置文件
-        def resDir = 'src/main/res'
-        def patternsToDelete = [
-            // ic_launcher_background.xml
-            "${resDir}/drawable/ic_launcher_background.xml",
-            "${resDir}/values/ic_launcher_background.xml",
-            // ic_launcher_foreground.xml (v24)
-            "${resDir}/drawable-v24/ic_launcher_foreground.xml",
-            // 所有mipmap目录下的ic_launcher_foreground.png（包括anydpi-v26）
-            "${resDir}/mipmap-mdpi/ic_launcher_foreground.png",
-            "${resDir}/mipmap-hdpi/ic_launcher_foreground.png",
-            "${resDir}/mipmap-xhdpi/ic_launcher_foreground.png",
-            "${resDir}/mipmap-xxhdpi/ic_launcher_foreground.png",
-            "${resDir}/mipmap-xxxhdpi/ic_launcher_foreground.png",
-            "${resDir}/mipmap-anydpi-v26/ic_launcher_foreground.png",
-            // 所有drawable和drawable-*目录下的splash.png
-            "${resDir}/drawable/splash.png",
-            "${resDir}/drawable-land/splash.png",
-            "${resDir}/drawable-land-mdpi/splash.png",
-            "${resDir}/drawable-land-hdpi/splash.png",
-            "${resDir}/drawable-land-xhdpi/splash.png",
-            "${resDir}/drawable-land-xxhdpi/splash.png",
-            "${resDir}/drawable-land-xxxhdpi/splash.png",
-            "${resDir}/drawable-port/splash.png",
-            "${resDir}/drawable-port-mdpi/splash.png",
-            "${resDir}/drawable-port-hdpi/splash.png",
-            "${resDir}/drawable-port-xhdpi/splash.png",
-            "${resDir}/drawable-port-xxhdpi/splash.png",
-            "${resDir}/drawable-port-xxxhdpi/splash.png"
-        ]
-        
-        patternsToDelete.each { filePath ->
-            def fileObj = file(filePath)
-            if (fileObj.exists()) {
-                fileObj.delete()
-                println "Deleted: $filePath"
-            }
-        }
-    }
-}
-
-// 创建缺失的资源文件（在删除任务之后执行）
-task createMissingResources {
-    doLast {
-        // adaptive icon 配置 - foreground 必须是 mipmap 类型
-        def launcherXml = '''<?xml version="1.0" encoding="utf-8"?>
-<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/ic_launcher_background"/>
-    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
-</adaptive-icon>'''
-        
-        // 前景图标（矢量图形）- 必须放在 mipmap-anydpi-v26 目录
-        def foregroundXml = '''<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path
-        android:fillColor="#8b0000"
-        android:pathData="M54,5 L60,40 L97,40 L65,62 L76,97 L54,75 L32,97 L43,62 L11,40 L48,40 Z"/>
-</vector>'''
-        
-        // 颜色配置
-        def colorsXml = '''<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="ic_launcher_background">#f4ecd8</color>
-</resources>'''
-        
-        // 启动画面（使用颜色背景）
-        def splashXml = '''<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/ic_launcher_background"/>
-</layer-list>'''
-        
-        // 创建目录和文件 - foreground 必须放在 mipmap-anydpi-v26
-        def filesToCreate = [
-            ['src/main/res/mipmap-anydpi-v26/ic_launcher.xml', launcherXml],
-            ['src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml', launcherXml],
-            ['src/main/res/mipmap-anydpi-v26/ic_launcher_foreground.xml', foregroundXml],
-            ['src/main/res/values/colors.xml', colorsXml],
-            ['src/main/res/drawable/splash.xml', splashXml],
-            ['src/main/res/drawable-land/splash.xml', splashXml]
-        ]
-        
-        filesToCreate.each { filePath, content ->
-            def fileObj = file(filePath)
-            fileObj.parentFile.mkdirs()
-            fileObj.write(content)
-            println "Created: $filePath"
-        }
-    }
-}
-
-// 在构建前执行任务（先删除旧文件，再创建新文件）
-preBuild.dependsOn deleteAdaptiveIconConfigs
-createMissingResources.dependsOn deleteAdaptiveIconConfigs
-preBuild.dependsOn createMissingResources
-
 android {
     namespace = "com.tangshiquezi.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -113,24 +11,20 @@ android {
         versionName "V1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: `https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61`
-            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    
-    // 确保使用AndroidX
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
     }
-    
-    // 添加签名配置
+
     signingConfigs {
         release {
             storeFile file('my-release-key.keystore')
@@ -142,7 +36,7 @@ android {
             storeType 'JKS'
         }
     }
-    
+
     buildTypes {
         release {
             minifyEnabled false
