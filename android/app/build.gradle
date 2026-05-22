@@ -8,7 +8,8 @@ task deleteAdaptiveIconConfigs {
             'src/main/res/drawable-v24/ic_launcher_foreground.xml',
             'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
             'src/main/res/drawable/splash.png',
-            'src/main/res/drawable-land-mdpi/splash.png'
+            'src/main/res/drawable-land-mdpi/splash.png',
+            'src/main/res/values/ic_launcher_background.xml'  // 删除重复的颜色定义文件
         ]
         
         filesToDelete.each { filePath ->
