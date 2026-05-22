@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-// 删除旧的自适应图标配置文件（保留 mipmap-anydpi-v26）
+// 删除旧的自适应图标配置文件（包括 mipmap-anydpi-v26）
 task deleteAdaptiveIconConfigs {
     doLast {
         // 删除所有可能存在的损坏PNG和XML配置文件
@@ -11,12 +11,13 @@ task deleteAdaptiveIconConfigs {
             "${resDir}/values/ic_launcher_background.xml",
             // ic_launcher_foreground.xml (v24)
             "${resDir}/drawable-v24/ic_launcher_foreground.xml",
-            // 所有mipmap目录下的ic_launcher_foreground.png
+            // 所有mipmap目录下的ic_launcher_foreground.png（包括anydpi-v26）
             "${resDir}/mipmap-mdpi/ic_launcher_foreground.png",
             "${resDir}/mipmap-hdpi/ic_launcher_foreground.png",
             "${resDir}/mipmap-xhdpi/ic_launcher_foreground.png",
             "${resDir}/mipmap-xxhdpi/ic_launcher_foreground.png",
             "${resDir}/mipmap-xxxhdpi/ic_launcher_foreground.png",
+            "${resDir}/mipmap-anydpi-v26/ic_launcher_foreground.png",
             // 所有drawable和drawable-*目录下的splash.png
             "${resDir}/drawable/splash.png",
             "${resDir}/drawable-land/splash.png",
