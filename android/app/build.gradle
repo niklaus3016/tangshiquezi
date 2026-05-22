@@ -3,23 +3,37 @@ apply plugin: 'com.android.application'
 // 删除旧的自适应图标配置文件（保留 mipmap-anydpi-v26）
 task deleteAdaptiveIconConfigs {
     doLast {
-        def filesToDelete = [
-            'src/main/res/drawable/ic_launcher_background.xml',
-            'src/main/res/drawable-v24/ic_launcher_foreground.xml',
-            'src/main/res/values/ic_launcher_background.xml',  // 删除重复的颜色定义文件
-            // 删除所有分辨率的损坏PNG文件
-            'src/main/res/mipmap-mdpi/ic_launcher_foreground.png',
-            'src/main/res/mipmap-hdpi/ic_launcher_foreground.png',
-            'src/main/res/mipmap-xhdpi/ic_launcher_foreground.png',
-            'src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png',
-            'src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png',
-            'src/main/res/drawable/splash.png',
-            'src/main/res/drawable-land/splash.png',
-            'src/main/res/drawable-land-mdpi/splash.png',
-            'src/main/res/drawable-port-mdpi/splash.png'
+        // 删除所有可能存在的损坏PNG和XML配置文件
+        def resDir = 'src/main/res'
+        def patternsToDelete = [
+            // ic_launcher_background.xml
+            "${resDir}/drawable/ic_launcher_background.xml",
+            "${resDir}/values/ic_launcher_background.xml",
+            // ic_launcher_foreground.xml (v24)
+            "${resDir}/drawable-v24/ic_launcher_foreground.xml",
+            // 所有mipmap目录下的ic_launcher_foreground.png
+            "${resDir}/mipmap-mdpi/ic_launcher_foreground.png",
+            "${resDir}/mipmap-hdpi/ic_launcher_foreground.png",
+            "${resDir}/mipmap-xhdpi/ic_launcher_foreground.png",
+            "${resDir}/mipmap-xxhdpi/ic_launcher_foreground.png",
+            "${resDir}/mipmap-xxxhdpi/ic_launcher_foreground.png",
+            // 所有drawable和drawable-*目录下的splash.png
+            "${resDir}/drawable/splash.png",
+            "${resDir}/drawable-land/splash.png",
+            "${resDir}/drawable-land-mdpi/splash.png",
+            "${resDir}/drawable-land-hdpi/splash.png",
+            "${resDir}/drawable-land-xhdpi/splash.png",
+            "${resDir}/drawable-land-xxhdpi/splash.png",
+            "${resDir}/drawable-land-xxxhdpi/splash.png",
+            "${resDir}/drawable-port/splash.png",
+            "${resDir}/drawable-port-mdpi/splash.png",
+            "${resDir}/drawable-port-hdpi/splash.png",
+            "${resDir}/drawable-port-xhdpi/splash.png",
+            "${resDir}/drawable-port-xxhdpi/splash.png",
+            "${resDir}/drawable-port-xxxhdpi/splash.png"
         ]
         
-        filesToDelete.each { filePath ->
+        patternsToDelete.each { filePath ->
             def fileObj = file(filePath)
             if (fileObj.exists()) {
                 fileObj.delete()
