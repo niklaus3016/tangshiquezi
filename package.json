@@ -9,8 +9,9 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "mobile:sync": "npm run build && npx cap sync",
-    "mobile:open": "npx cap open android"
+    "cap:sync": "cap sync",
+    "cap:add": "cap add",
+    "cap:open": "cap open"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.3",
