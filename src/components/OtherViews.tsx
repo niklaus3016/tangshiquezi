@@ -4,6 +4,7 @@ import { Settings as SettingsIcon, ChevronLeft, Play, LayoutGrid, Info, Trash2, 
 import { AppState, UserData, Difficulty, Poem } from '../types';
 import { POEMS_DATA, LEVEL_RULES } from '../data/poems';
 import { Header } from './Common';
+import { speechService } from '../services/speech';
 
 // --- SplashView ---
 export const SplashView: React.FC<{ onStart: () => void }> = ({ onStart }) => {
@@ -403,29 +404,26 @@ export const ResultView: React.FC<{
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
-    return () => window.speechSynthesis.cancel();
+    return () => speechService.stop();
   }, []);
 
-  const handleSpeak = useCallback(() => {
+  const handleSpeak = useCallback(async () => {
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      await speechService.stop();
       setIsSpeaking(false);
       return;
     }
+
     const textToRead = `${poem.title}！${poem.author}！${poem.content.join('。')}`;
-    const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.6;
-    utterance.pitch = 1.0;
-
-    utterance.onend = () => setIsSpeaking(false);
-
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => v.lang.includes('zh') && (v.name.includes('Xiaoxiao') || v.name.includes('Scenic')));
-    if (preferredVoice) utterance.voice = preferredVoice;
-
-    window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
+    
+    try {
+      setIsSpeaking(true);
+      await speechService.speak(textToRead, 0.6);
+      setIsSpeaking(false);
+    } catch (error) {
+      setIsSpeaking(false);
+      alert('语音朗读失败，请检查设备音频设置');
+    }
   }, [poem, isSpeaking]);
 
   return (

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Volume2 } from 'lucide-react';
 import { Poem, UserSettings } from '../types';
 import { Header } from './Common';
+import { speechService } from '../services/speech';
 
 interface StudyViewProps {
   poem: Poem;
@@ -26,72 +27,49 @@ export const StudyView: React.FC<StudyViewProps> = ({ poem, settings, onBack, on
   // Clean up speech on unmount
   useEffect(() => {
     return () => {
-      window.speechSynthesis.cancel();
+      speechService.stop();
     };
   }, []);
 
-  const handleSpeak = useCallback(() => {
-    if (!('speechSynthesis' in window)) {
-      alert('您的浏览器不支持语音朗读功能');
-      return;
-    }
-
+  const handleSpeak = useCallback(async () => {
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      await speechService.stop();
       setIsSpeaking(false);
       return;
     }
 
     const textToRead = `${poem.title}！${poem.author}！${poem.content.join('。')}`;
-    const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.6; // Further reduced for emotional pace
-    utterance.pitch = 1.0;
-
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    // Try to find a high quality voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => v.lang.includes('zh') && (v.name.includes('Xiaoxiao') || v.name.includes('Scenic')));
-    if (preferredVoice) utterance.voice = preferredVoice;
-
-    window.speechSynthesis.speak(utterance);
-    setIsSpeaking(true);
+    
+    try {
+      setIsSpeaking(true);
+      await speechService.speak(textToRead, 0.6);
+      setIsSpeaking(false);
+    } catch (error) {
+      setIsSpeaking(false);
+      alert('语音朗读失败，请检查设备音频设置');
+    }
   }, [poem, isSpeaking]);
 
-  const handleSpeakParaphrase = useCallback(() => {
-    if (!('speechSynthesis' in window)) {
-      alert('您的浏览器不支持语音朗读功能');
-      return;
-    }
-
+  const handleSpeakParaphrase = useCallback(async () => {
     if (isSpeakingParaphrase) {
-      window.speechSynthesis.cancel();
+      await speechService.stop();
       setIsSpeakingParaphrase(false);
       return;
     }
 
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      await speechService.stop();
       setIsSpeaking(false);
     }
 
-    const utterance = new SpeechSynthesisUtterance(poem.paraphrase);
-    utterance.lang = 'zh-CN';
-    utterance.rate = 0.8;
-    utterance.pitch = 1.0;
-
-    utterance.onend = () => setIsSpeakingParaphrase(false);
-    utterance.onerror = () => setIsSpeakingParaphrase(false);
-
-    // Try to find a high quality voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(v => v.lang.includes('zh') && (v.name.includes('Xiaoxiao') || v.name.includes('Scenic')));
-    if (preferredVoice) utterance.voice = preferredVoice;
-
-    window.speechSynthesis.speak(utterance);
-    setIsSpeakingParaphrase(true);
+    try {
+      setIsSpeakingParaphrase(true);
+      await speechService.speak(poem.paraphrase, 0.8);
+      setIsSpeakingParaphrase(false);
+    } catch (error) {
+      setIsSpeakingParaphrase(false);
+      alert('语音朗读失败，请检查设备音频设置');
+    }
   }, [poem.paraphrase, isSpeakingParaphrase, isSpeaking]);
 
   return (
