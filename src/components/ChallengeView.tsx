@@ -45,15 +45,13 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ poem, userData, up
     };
   });
 
-  const [shuffledIndices, setShuffledIndices] = useState<number[]>([]);
-
-  useEffect(() => {
+  const [shuffledIndices, setShuffledIndices] = useState<number[]>(() => {
     const indices = poem.content.map((_, i) => i);
     if (userData.settings.difficulty === Difficulty.HARD) {
       indices.sort(() => Math.random() - 0.5);
     }
-    setShuffledIndices(indices);
-  }, [poem, userData.settings.difficulty]);
+    return indices;
+  });
 
   const initQuestion = useCallback((indexState: number) => {
     if (shuffledIndices.length === 0) return;
@@ -116,11 +114,12 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ poem, userData, up
     }));
   }, [poem.content, userData.settings.difficulty, shuffledIndices]);
 
+  // Use useLayoutEffect to ensure initialization happens before first render
   useEffect(() => {
-    if (gameState.blankIndices.length === 0 && shuffledIndices.length > 0) {
+    if (shuffledIndices.length > 0 && gameState.blankIndices.length === 0) {
       initQuestion(gameState.sentenceIndex);
     }
-  }, [gameState.blankIndices.length, gameState.sentenceIndex, initQuestion, shuffledIndices]);
+  }, [shuffledIndices.length, gameState.blankIndices.length, gameState.sentenceIndex, initQuestion]);
 
   const handleOptionSelect = (char: string) => {
     if (gameState.isChecking) return;
@@ -137,44 +136,49 @@ export const ChallengeView: React.FC<ChallengeViewProps> = ({ poem, userData, up
       return;
     }
 
-    setGameState(prev => ({ ...prev, isChecking: true }));
     const isCorrect = newAnsweredBlanks.every((val, idx) => val === gameState.correctChars[idx]);
+    const currentSentenceIndex = gameState.sentenceIndex;
+    const currentLife = gameState.life;
+    const currentHintUsed = gameState.hintUsed;
+    const currentSessionScore = gameState.sessionScore;
 
     if (isCorrect) {
       setGameState(prev => ({
         ...prev,
+        isChecking: true,
         feedback: '回答正确！',
         feedbackType: 'correct',
         sessionScore: prev.sessionScore + 10,
       }));
       
       setTimeout(() => {
-        if (gameState.sentenceIndex + 1 < poem.content.length) {
-          initQuestion(gameState.sentenceIndex + 1);
+        if (currentSentenceIndex + 1 < poem.content.length) {
+          initQuestion(currentSentenceIndex + 1);
         } else {
-          onComplete(gameState.sessionScore + 10);
+          onComplete(currentSessionScore + 10);
         }
       }, 1500);
     } else {
+      const newLife = currentLife - 1;
       setGameState(prev => ({
         ...prev,
+        isChecking: true,
         feedback: '回答错误，再试一次！',
         feedbackType: 'wrong',
-        life: prev.life - 1,
+        life: newLife,
       }));
 
       setTimeout(() => {
-        if (gameState.life - 1 <= 0) {
-          // Game over - save progress and exit
+        if (newLife <= 0) {
           onExit({
             poemId: poem.id,
-            currentSentence: gameState.sentenceIndex,
+            currentSentence: currentSentenceIndex,
             life: 0,
-            hintUsed: gameState.hintUsed,
-            score: gameState.sessionScore
+            hintUsed: currentHintUsed,
+            score: currentSessionScore
           });
         } else {
-          initQuestion(gameState.sentenceIndex);
+          initQuestion(currentSentenceIndex);
         }
       }, 1500);
     }
