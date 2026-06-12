@@ -50,7 +50,7 @@ export const SplashView: React.FC<{ onStart: () => void }> = ({ onStart }) => {
               transition={{ delay: 0.4, duration: 1, type: "spring" }}
               className="text-8xl font-black text-ancient-red drop-shadow-2xl"
             >
-              缺字闯关
+              缺字挑战
             </motion.h1>
           </motion.div>
           
