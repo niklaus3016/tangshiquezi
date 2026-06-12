@@ -138,7 +138,7 @@ const PrivacyPolicyContent = () => (
     <p className="text-center text-ancient-ink/70 mb-6"><strong>生效日期</strong>：2026年05月22日</p>
 
     <div className="bg-ancient-bg p-6 rounded-lg border-l-4 border-ancient-red mb-6">
-      <p className="text-ancient-ink">欢迎使用「唐诗缺字闯关」（以下简称"本应用"）。本应用由<strong>深圳丰佰瑞网络科技有限公司</strong>（以下简称"我们"）开发并运营。我们深知个人信息对您的重要性，将严格遵守《中华人民共和国个人信息保护法》等相关法律法规，保护您的个人信息安全。</p>
+      <p className="text-ancient-ink">欢迎使用「唐诗缺字挑战」（以下简称"本应用"）。本应用由<strong>深圳丰佰瑞网络科技有限公司</strong>（以下简称"我们"）开发并运营。我们深知个人信息对您的重要性，将严格遵守《中华人民共和国个人信息保护法》等相关法律法规，保护您的个人信息安全。</p>
     </div>
 
     <p className="mb-6 text-ancient-ink">本隐私政策旨在说明我们如何收集、使用、存储和保护您在使用本应用过程中提供的个人信息，以及您对这些信息所享有的权利。请您在使用本应用前仔细阅读并充分理解本政策的全部内容，尤其是加粗的条款。如您对本政策有任何疑问、意见或建议，可通过本政策末尾提供的联系方式与我们联系。</p>
@@ -193,7 +193,7 @@ const PrivacyPolicyContent = () => (
     </div>
 
     <div className="mt-8 pt-6 border-t border-ancient-border text-center">
-      <p className="mb-2 text-ancient-ink/70">感谢您使用唐诗缺字闯关！</p>
+      <p className="mb-2 text-ancient-ink/70">感谢您使用唐诗缺字挑战！</p>
       <p className="mb-4 text-ancient-ink/70">我们致力于为您提供安全、便捷的唐诗学习服务。</p>
       <p className="text-sm text-ancient-ink/60">© 2026 版权所有</p>
     </div>
@@ -206,7 +206,7 @@ const UserAgreementContent = () => (
     <p className="text-center text-ancient-ink/70 mb-8">更新日期：2026年3月20日</p>
     
     <h2 className="text-xl font-bold mt-8 mb-4 text-ancient-red">1. 协议的接受</h2>
-    <p className="text-ancient-ink">欢迎使用「唐诗缺字闯关」应用（以下简称「本应用」）。</p>
+    <p className="text-ancient-ink">欢迎使用「唐诗缺字挑战」应用（以下简称「本应用」）。</p>
     <p className="text-ancient-ink">本协议是您与深圳丰佰瑞网络科技有限公司（以下简称「我们」）之间关于使用本应用的法律协议。</p>
     <p className="text-ancient-ink">通过下载、安装或使用本应用，您表示同意接受本协议的全部条款和条件。</p>
     

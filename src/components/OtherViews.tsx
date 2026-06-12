@@ -168,7 +168,7 @@ export const HomeView: React.FC<{
         <LayoutGrid size={120} className="text-ancient-red" />
       </div>
 
-      <Header title="唐诗缺字闯关" />
+      <Header title="唐诗缺字挑战" />
       
       <main className="flex-1 overflow-y-auto p-4 space-y-4 w-full max-w-2xl mx-auto z-10 no-scrollbar pb-28">
         {/* User Stats Hero - Cute Cartoon Avatar Layout */}
@@ -513,7 +513,7 @@ export const SettingsView: React.FC<{
             <button 
               onClick={() => setModalContent({ 
                 title: '关于我们', 
-                body: '唐诗缺字闯关 v1.0\n\n一款专注于传统文化学习的小游戏，通过“缺字填充”的方式帮助您深度领略大唐风骨。所有题目均选自经典《唐诗三百首》，难度由浅入深，伴您踏上一场诗词修身之旅。\n\n腹有诗书气自华。' 
+                body: '唐诗缺字挑战 v1.0\n\n一款专注于传统文化学习的小游戏，通过“缺字填充”的方式帮助您深度领略大唐风骨。所有题目均选自经典《唐诗三百首》，难度由浅入深，伴您踏上一场诗词修身之旅。\n\n腹有诗书气自华。' 
               })} 
               className="w-full flex justify-between p-3 items-center active:bg-gray-50 transition-colors"
             >
